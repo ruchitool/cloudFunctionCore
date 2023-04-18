@@ -1,0 +1,37 @@
+name: Build and Deploy to Cloud Run   
+ 
+on:  
+    push:
+        branches: 
+            - main 
+            
+env:
+    uname: hu-22-spark-ipl-fg-py-service    ### Accordingly username should be mandatorily provided for distinguing resource
+    FOLDERNAME2: Predictor       ### User should place main.py in a folder in any repository
+
+
+jobs:
+    setup-build-deploy:
+        name: Setup, Build, and Deploy
+        runs-on: ubuntu-latest 
+
+        steps:
+            - name: Checkout SCM
+              uses: actions/checkout@v1
+
+            # Setup gcloud CLI
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v0'
+              with:
+                credentials_json: '${{ secrets.GCP_SA_KEY }}'
+            - name: bash
+              run: |
+                  git lfs install
+            # Configure gcloud CLI
+            - name: GCP(gcloud) cli setup
+              run: |
+                  gcloud config set project cloud-run-service
+            - name: Function deployment 2
+              run: |-
+                gcloud functions deploy "$FOLDERNAME2" --source=./$FOLDERNAME2 --region us-west1 --entry-point $FOLDERNAME2 --runtime python310 --min-instances 1 --max-instances 1 --trigger-http --allow-unauthenticated --memory=1024MB
+                

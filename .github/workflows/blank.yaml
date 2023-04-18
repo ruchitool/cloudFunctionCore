@@ -33,5 +33,5 @@ jobs:
                   gcloud config set project cloud-run-service
             - name: Function deployment 2
               run: |-
-                gcloud functions deploy "$FOLDERNAME2" --source=./$FOLDERNAME2 --region us-west1 --entry-point $FOLDERNAME2 --runtime python310 --min-instances 1 --max-instances 1 --trigger-http --allow-unauthenticated --memory=1024MB
+                gcloud functions deploy "$FOLDERNAME2" --source=./$FOLDERNAME2 --region asia-south1 --entry-point $FOLDERNAME2 --runtime python310 --min-instances 1 --max-instances 5 --trigger-http --allow-unauthenticated --memory=2048MB
                 
